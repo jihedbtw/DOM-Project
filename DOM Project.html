@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Shopping Cart Example</title>
+    <style>
+      #heart-btn {
+			border: none;
+			background-color: black;
+			color: white;
+			font-size: 20px;
+			cursor: pointer;
+		}
+		#heart-btn.clicked {
+			background-color: red;
+        }
+    </style>
+  </head>
+  <body>
+    <h1>Shopping Cart</h1>
+    <ul id="cart-list">
+      <li data-price="10">
+        <span>Item 1 - $10</span>
+        <button class="decrease-quantity">-</button>
+        <span class="quantity">1</span>
+        <button class="increase-quantity">+</button>
+        <button class="delete-item">Delete</button>
+        <button id="heart-btn">❤</button>
+      </li>
+      <li data-price="20">
+        <span>Item 2 - $20</span>
+        <button class="decrease-quantity">-</button>
+        <span class="quantity">1</span>
+        <button class="increase-quantity">+</button>
+        <button class="delete-item">Delete</button>
+        <button id="heart-btn">❤</button>
+      </li>
+      <li data-price="30">
+        <span>Item 3 - $30</span>
+        <button class="decrease-quantity">-</button>
+        <span class="quantity">1</span>
+        <button class="increase-quantity">+</button>
+        <button class="delete-item">Delete</button>
+        <button id="heart-btn">❤</button>
+      </li>
+    </ul>
+    <p>Total: $<span id="total">60</span></p>
+    <button type="submit" id="checkout-button">Checkout</button>
+    <script>
+      const cartList = document.getElementById('cart-list');
+      const total = document.getElementById('total');
+      const checkoutButton = document.getElementById('checkout-button');
+
+      // Attach event listeners to the cart list
+      cartList.addEventListener('click', (event) => {
+        const target = event.target;
+        const listItem = target.closest('li');
+        if (!listItem) return;
+
+        if (target.matches('.delete-item')) {
+          listItem.remove();
+        } else if (target.matches('.decrease-quantity')) {
+          const quantity = listItem.querySelector('.quantity');
+          if (quantity.textContent > 1) {
+            quantity.textContent--;
+          }
+        } else if (target.matches('.increase-quantity')) {
+          const quantity = listItem.querySelector('.quantity');
+          quantity.textContent++;
+        } else if (target.classList.contains('clicked')) {
+				target.innerHTML = '❤';
+                target.classList.toggle('clicked');
+		} else if (!target.classList.contains('clicked')) {
+				target.innerHTML = '❤️';
+                target.classList.toggle('clicked');
+		}
+        
+        updateTotal();
+      });
+
+      // Calculate the total price of the cart
+      function updateTotal() {
+        let totalPrice = 0;
+        const items = cartList.children;
+        for (let i = 0; i < items.length; i++) {
+          const item = items[i];
+          const price = parseFloat(item.getAttribute('data-price'));
+          const quantity = parseInt(item.querySelector('.quantity').textContent);
+          totalPrice += price * quantity;
+        }
+        total.textContent = totalPrice.toFixed(2);
+      }
+    </script>
+  </body>
+</html>
